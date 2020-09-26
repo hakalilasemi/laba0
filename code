@@ -15,7 +15,7 @@ int main(int argc, char *argv[])
   case 0:
           printf(" CHILD: Это процесс-потомок!\n");
   default:
-          printf("PARENT: Это процесс-родитель!\n");
+          printf("PARENT: PID -- %d\n", getpid()); // getpid возвращает цифровой идентификатор процесса
           wait();
           printf("PARENT: Код возврата потомка:%d\n", WEXITSTATUS(rv));
   }

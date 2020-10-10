@@ -13,10 +13,11 @@ int main(int argc, char *argv[])
           printf("Ошибка!\n");
           exit(-1); /*выход из родительского процесса*/
   case 0:
-          printf(" CHILD: Это процесс-потомок!\n");
+          execvp(argc[1], &argv[1]); 
+          exit(-1); 
   default:
           printf("PARENT: PID -- %d\n", getpid()); // getpid возвращает цифровой идентификатор процесса
-          wait();
+          wait(&rv);
           printf("PARENT: Код возврата потомка:%d\n", WEXITSTATUS(rv));
   }
 }

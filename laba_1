@@ -1,13 +1,73 @@
 #include <stdio.h>
+#include <stdlib.h>
 #include <fcntl.h>
-#include <unistd.h>
 #include <sys/types.h>
+#include <unistd.h>
 
+int main(int argc, char const *argv[])
+{
+    int file;
+    char buf[1000];
+    int countBite = 0;
+    int userNumber;
+    int arrSymbol[1000];
+    int positionSymbol = 1;
+    int position;
+    int lineLength = 0;
 
-int main (int argc, char* argv[]){
+    arrSymbol[0] = -1;
+    // Открытие файла
+    if((file = open("file.txt", O_RDONLY)) == -1)
+    {
+        printf("Файл не открыт\n");
+        exit(-1);
+    }
 
+    // Нахождение символа переноса строки
+    countBite = read(file, buf, 1000);
+    int i = 0;
+    while(i < countBite)
+    {
+        if(buf[i] == '\n')
+        {
+            arrSymbol[positionSymbol++] = i;
+        }
+        i++;
+    }
+    printf("Введите номер строки: ");
+    scanf("%d", &userNumber);
 
+    // Установка курсора
+    if(userNumber == 0)
+    {
+        exit(-1);
+    }
+    else if(userNumber > positionSymbol-1)
+    {
+        printf("Строка не найдена\n");
+        exit(-1);
+    }
+    else
+    {
+        position = lseek(file, arrSymbol[userNumber - 1] + 1, SEEK_SET);
+        lineLength = arrSymbol[userNumber]-arrSymbol[userNumber - 1];
+    }
 
+    // Очистка буфера и запись в него строки
+    memset(buf, NULL, 1000);
+    countBite = read(file, buf, lineLength);
+    i = 0;
+    while(buf[i] != '\n')
+    {
+        printf("%c", buf[i]);
+        i++;
+    }
+    printf("\n");
 
-return 0;
+    // Закрытие файла
+    if(close(file))
+    {
+        printf("Файл не закрыт\n");
+    }
+    return 0;
 }
